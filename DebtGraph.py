@@ -69,11 +69,11 @@ class DebtGraph:
             if not result:
                 debts[debtee].append((debtor, debt))
                 result = True
-            if(debtor in debts.keys() and len(debts[debtor]) == 0):
-                debts.pop(debtor)
-            if(debtee in debts.keys() and len(debts[debtee]) == 0):
-                debts.pop(debtee)
-            return result
+        if(debtor in debts.keys() and len(debts[debtor]) == 0):
+            del debts[debtor]
+        if(debtee in debts.keys() and len(debts[debtee]) == 0):
+            del debts[debtee]
+        return result
     def get_users(self):
         return self.users
     def simplify_debts(self):
@@ -101,13 +101,12 @@ class DebtGraph:
                                 flag = True
                                 tmp_debtee = debtor
                                 tmp_debtor = debtee2
-                                debt = debts[debtee][first_debtors.index(tmp_debtor)][1]
-                                self.add_debt(tmp_debtor, debtee, debt)
+                                self.add_debt(debtee, tmp_debtor, debt, users, debts)
                                 while tmp_debtee != debtee :
-                                    self.add_debt(tmp_debtee, tmp_debtor, debt)
+                                    self.add_debt(tmp_debtor,tmp_debtee, debt, users, debts)
                                     tmp_debtor = tmp_debtee
                                     tmp_debtee = parent[tmp_debtee]
-                                self.add_debt(tmp_debtee, tmp_debtor, debt)
+                                self.add_debt(tmp_debtor, tmp_debtee, debt, users, debts)
                                 break
                             else:
                                 if debtee2 not in parent.keys():
